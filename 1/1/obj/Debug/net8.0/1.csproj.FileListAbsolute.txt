@@ -1,0 +1,14 @@
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\bin\Debug\net8.0\1.exe
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\bin\Debug\net8.0\1.deps.json
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\bin\Debug\net8.0\1.runtimeconfig.json
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\bin\Debug\net8.0\1.dll
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\bin\Debug\net8.0\1.pdb
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.AssemblyInfoInputs.cache
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.AssemblyInfo.cs
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.csproj.CoreCompileInputs.cache
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.dll
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\refint\1.dll
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.pdb
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\1.genruntimeconfig.cache
+C:\Users\79163\Documents\GitHub\шарпы 4 семестр\1\1\obj\Debug\net8.0\ref\1.dll
