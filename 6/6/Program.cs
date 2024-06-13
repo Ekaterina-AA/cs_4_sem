@@ -82,6 +82,24 @@ public class SuperMatrixMultiplier
         return result;
     }
 
+    public int[,] MultiplyMatrices_delegate(Func<int, int, int> del1, Func<int, int, int> del2, int rows, int columns1, int columns2)
+    {
+        int[,] result = new int[rows, columns2];
+
+        Parallel.For(0, rows, i =>
+        {
+            for (int j = 0; j < columns2; j++)
+            {
+                for (int k = 0; k < columns1; k++)
+                {
+                    var temp1 = del1(i,j);
+                    var temp2 = del2(i,k);
+                    result[i, j] += temp1*temp2;
+                }
+            }
+        });
+        return result;
+    }
 
     public async Task WriteMatrixResultToFileAsync(int[,] matrix, string filePath)
     {
@@ -103,19 +121,32 @@ class Program
 {
     static async Task Main()
     {
+        int matrixMaker1(int i, int j)
+        {
+            return i+j;
+        }
+        int matrixMaker2(int i, int j)
+        {
+            return i-j;
+        }
+        Func<int, int, int> del1 = matrixMaker1;
+        Func<int, int, int> del2 = matrixMaker2;
+        int rows = 1000000,columns1 = 100, columns2 = 100;
+
         SuperMatrixMultiplier matrixMultiplier = new SuperMatrixMultiplier();
 
-        int[,] matrix1 = matrixMultiplier.GenerateMatrix(1000, 50000);
-        int[,] matrix2 = matrixMultiplier.GenerateMatrix(50000, 2);
-
-        matrixMultiplier.WriteMatrixToFile(matrix1, "matrix1.txt");
-        matrixMultiplier.WriteMatrixToFile(matrix2, "matrix2.txt");
-
-        int[,] readMatrix1 = matrixMultiplier.ReadMatrixFromFile("matrix1.txt");
-        int[,] readMatrix2 = matrixMultiplier.ReadMatrixFromFile("matrix2.txt");
-
-        int[,] resultMatrix = matrixMultiplier.MultiplyMatrices(readMatrix1, readMatrix2);
-
+        int[,] resultMatrix = matrixMultiplier.MultiplyMatrices_delegate(matrixMaker1, matrixMaker2, rows, columns1, columns2);
+        //int[,] matrix1 = matrixMultiplier.GenerateMatrix(1000, 50000);
+        //int[,] matrix2 = matrixMultiplier.GenerateMatrix(50000, 2);
+        //
+        //matrixMultiplier.WriteMatrixToFile(matrix1, "matrix1.txt");
+        //matrixMultiplier.WriteMatrixToFile(matrix2, "matrix2.txt");
+        //
+        //int[,] readMatrix1 = matrixMultiplier.ReadMatrixFromFile("matrix1.txt");
+        //int[,] readMatrix2 = matrixMultiplier.ReadMatrixFromFile("matrix2.txt");
+        //
+        //int[,] resultMatrix = matrixMultiplier.MultiplyMatrices(readMatrix1, readMatrix2);
+        //
         await matrixMultiplier.WriteMatrixResultToFileAsync(resultMatrix, "resultMatrix.txt");
     }
 }
