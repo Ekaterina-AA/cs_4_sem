@@ -162,7 +162,7 @@ class Program
         }
         Func<int, int, int> del1 = matrixMaker1;
         Func<int, int, int> del2 = matrixMaker2;
-        int rows = 10, columns1 = 10, columns2 = 10;
+        int rows = 10000, columns1 = 10000, columns2 = 10000;
 
         SuperMatrixMultiplier matrixMultiplier = new SuperMatrixMultiplier();
 
