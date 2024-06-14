@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 public class SuperMatrixMultiplier
@@ -101,6 +102,47 @@ public class SuperMatrixMultiplier
         return result;
     }
 
+    public void MultiplyMatrices_delegate(Func<int, int, int> del1, Func<int, int, int> del2, int rows, int columns1, int columns2, string filePath)
+    {
+        object lockObject = new object();
+
+        using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        {
+            Parallel.For(0, rows, i =>
+            {
+                for (int j = 0; j < columns2; j++)
+                {
+                    int tempResult = 0;
+                    for (int k = 0; k < columns1; k++)
+                    {
+                        var temp1 = del1(i, j);
+                        var temp2 = del2(i, k);
+                        tempResult += temp1 * temp2;
+                    }
+                    byte[] bytes = BitConverter.GetBytes(tempResult);
+                    //byte[] bytes = Encoding.UTF8.GetBytes(tempResult.ToString());
+                    byte[] bytes2 = Encoding.UTF8.GetBytes(" ");
+                    byte[] bytes3 = Encoding.UTF8.GetBytes("\n");
+
+                    lock (lockObject)
+                    {
+                        long position = i *  columns2 * (sizeof(int) + sizeof(char)) + j * (sizeof(int) + sizeof(char)) + i * sizeof(char);
+                        fs.Seek(position, SeekOrigin.Begin);
+                        fs.Write(bytes, 0, bytes.Length);
+
+                        position += sizeof(int);
+                        fs.Seek(position, SeekOrigin.Begin);
+                        fs.Write(bytes2, 0, bytes2.Length);
+
+                        position += sizeof(char);
+                        fs.Seek(position, SeekOrigin.Begin);
+                        fs.Write(bytes3, 0, bytes3.Length);
+                    }
+                }
+            });
+        }
+    }
+
     public async Task WriteMatrixResultToFileAsync(int[,] matrix, string filePath)
     {
         using (StreamWriter writer = new StreamWriter(filePath))
@@ -131,11 +173,12 @@ class Program
         }
         Func<int, int, int> del1 = matrixMaker1;
         Func<int, int, int> del2 = matrixMaker2;
-        int rows = 1000000,columns1 = 100, columns2 = 100;
+        int rows = 10, columns1 = 10, columns2 = 10;
 
         SuperMatrixMultiplier matrixMultiplier = new SuperMatrixMultiplier();
 
-        int[,] resultMatrix = matrixMultiplier.MultiplyMatrices_delegate(matrixMaker1, matrixMaker2, rows, columns1, columns2);
+        matrixMultiplier.MultiplyMatrices_delegate(matrixMaker1, matrixMaker2, rows, columns1, columns2, "resultMatrix.dat");
+        //int[,] resultMatrix = matrixMultiplier.MultiplyMatrices_delegate(matrixMaker1, matrixMaker2, rows, columns1, columns2);
         //int[,] matrix1 = matrixMultiplier.GenerateMatrix(1000, 50000);
         //int[,] matrix2 = matrixMultiplier.GenerateMatrix(50000, 2);
         //
@@ -147,7 +190,7 @@ class Program
         //
         //int[,] resultMatrix = matrixMultiplier.MultiplyMatrices(readMatrix1, readMatrix2);
         //
-        await matrixMultiplier.WriteMatrixResultToFileAsync(resultMatrix, "resultMatrix.txt");
+        //await matrixMultiplier.WriteMatrixResultToFileAsync(resultMatrix, "resultMatrix.txt");
     }
 }
 
