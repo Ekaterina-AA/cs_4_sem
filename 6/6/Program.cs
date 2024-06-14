@@ -120,23 +120,12 @@ public class SuperMatrixMultiplier
                         tempResult += temp1 * temp2;
                     }
                     byte[] bytes = BitConverter.GetBytes(tempResult);
-                    //byte[] bytes = Encoding.UTF8.GetBytes(tempResult.ToString());
-                    byte[] bytes2 = Encoding.UTF8.GetBytes(" ");
-                    byte[] bytes3 = Encoding.UTF8.GetBytes("\n");
 
                     lock (lockObject)
                     {
-                        long position = i *  columns2 * (sizeof(int) + sizeof(char)) + j * (sizeof(int) + sizeof(char)) + i * sizeof(char);
+                        long position = i * columns2 * (sizeof(int)) + j * (sizeof(int));
                         fs.Seek(position, SeekOrigin.Begin);
                         fs.Write(bytes, 0, bytes.Length);
-
-                        position += sizeof(int);
-                        fs.Seek(position, SeekOrigin.Begin);
-                        fs.Write(bytes2, 0, bytes2.Length);
-
-                        position += sizeof(char);
-                        fs.Seek(position, SeekOrigin.Begin);
-                        fs.Write(bytes3, 0, bytes3.Length);
                     }
                 }
             });
@@ -191,6 +180,26 @@ class Program
         //int[,] resultMatrix = matrixMultiplier.MultiplyMatrices(readMatrix1, readMatrix2);
         //
         //await matrixMultiplier.WriteMatrixResultToFileAsync(resultMatrix, "resultMatrix.txt");
+        int i = 0;
+        using (BinaryReader reader = new BinaryReader(File.Open("resultMatrix.dat", FileMode.Open)))
+        {
+            using (StreamWriter writer = new StreamWriter("resultMatrix.txt"))
+            {
+                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                {
+                    int value = reader.ReadInt32();
+
+                    writer.Write(value + " ");
+                    i++;
+                    if (i == columns2)
+                    {
+                        i = 0;
+                        writer.WriteLine();
+                    }
+                    
+                }
+            }
+        }
     }
 }
 
